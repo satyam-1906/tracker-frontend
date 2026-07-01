@@ -82,7 +82,7 @@ async function fetchData() {
             markerRegistry[markerId].slideTo([parseFloat(element.last_coords[0]), parseFloat(element.last_coords[1])], {duration: 1000, keepAtCenter: false});
         }
         else {
-            const newMarker = L.marker([parseFloat(element.last_coords[0]), parseFloat(element.last_coords[1])]).bindPopup(`${markerId}`);
+            const newMarker = L.marker([parseFloat(element.last_coords[0]), parseFloat(element.last_coords[1])]).bindPopup(`${markerId}`, {autoPan: false});
             
             markerGroup.addLayer(newMarker);
             markerRegistry[markerId] = newMarker;
