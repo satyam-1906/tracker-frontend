@@ -63,11 +63,6 @@ function errorCallback(error) {
   }
 }
 
-function create_marker(lat, long, device_id) {
-    const newMarker = L.marker([lat, long]).bindPopup(`${device_id}`);
-    markerGroup.addLayer(newMarker)
-}
-
 async function fetchData() {
   try {
     // 1. Initiate the GET request (fetch uses GET by default)
@@ -84,7 +79,7 @@ async function fetchData() {
     data.forEach(element => {
         const markerId = element.device_id
         if (markerRegistry[markerId]) {
-            markerRegistry[markerId].slideTo([parseFloat(element.last_coords[0]), parseFloat(element.last_coords[1])], {duration: 1000});
+            markerRegistry[markerId].slideTo([parseFloat(element.last_coords[0]), parseFloat(element.last_coords[1])], {duration: 1000, keepAtCenter: false});
         }
         else {
             const newMarker = L.marker([parseFloat(element.last_coords[0]), parseFloat(element.last_coords[1])]).bindPopup(`${markerId}`);
@@ -104,7 +99,7 @@ async function fetchData() {
         }
     });
     //map.setView(coords, map.getZoom(), {animate:true, duration:1});
-    marker.slideTo(coords, {duration: 1000});
+    marker.slideTo(coords, {duration: 1000, keepAtCenter: false});
   } catch (error) {
     // 4. Handle network-level failures or thrown errors
     console.error('Fetch failed:', error);
