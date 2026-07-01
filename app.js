@@ -100,13 +100,16 @@ async function fetchData() {
     });
     //map.setView(coords, map.getZoom(), {animate:true, duration:1});
     marker.slideTo(coords, {duration: 1000, keepAtCenter: false});
+    
+    // Update active devices list UI
+    update_device_list(data);
   } catch (error) {
     // 4. Handle network-level failures or thrown errors
     console.error('Fetch failed:', error);
   }
 }
 
-setInterval(fetchData, 5000);
+setInterval(fetchData, 10000);
 
 const button = document.getElementById('refresh_btn');
 
@@ -186,7 +189,85 @@ document.addEventListener("DOMContentLoaded", () => {
     set_alarms_in_local_storage();
     update_alarm_list()
     sync_user_list()
+    setup_tabs()
 });
+
+function setup_tabs() {
+  document.querySelectorAll('.tab-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const tabName = button.getAttribute('data-tab');
+      
+      // Deactivate all tabs
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      
+      // Activate clicked tab
+      button.classList.add('active');
+      const targetContent = document.getElementById(`tab-${tabName}`);
+      if (targetContent) {
+        targetContent.classList.add('active');
+      }
+    });
+  });
+}
+
+function update_device_list(data) {
+  const deviceList = document.getElementById("device_list");
+  if (!deviceList) return;
+  
+  deviceList.replaceChildren();
+  
+  if (data.length === 0) {
+    const emptyLi = document.createElement('li');
+    emptyLi.style.justifyContent = 'center';
+    emptyLi.style.color = 'var(--text-secondary)';
+    emptyLi.textContent = 'No active devices';
+    deviceList.appendChild(emptyLi);
+    return;
+  }
+  
+  data.forEach(element => {
+    const lat = parseFloat(element.last_coords[0]).toFixed(5);
+    const lng = parseFloat(element.last_coords[1]).toFixed(5);
+    
+    const li = document.createElement('li');
+    li.className = 'device-item';
+    
+    const infoDiv = document.createElement('div');
+    infoDiv.className = 'device-info';
+    
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'device-name';
+    nameSpan.textContent = element.device_id;
+    
+    const coordsSpan = document.createElement('span');
+    coordsSpan.className = 'device-coords';
+    coordsSpan.textContent = `Lat: ${lat}, Lng: ${lng}`;
+    
+    infoDiv.appendChild(nameSpan);
+    infoDiv.appendChild(coordsSpan);
+    
+    const locateBtn = document.createElement('button');
+    locateBtn.className = 'locate-btn';
+    locateBtn.textContent = 'Locate';
+    
+    const locateHandler = (e) => {
+      e.stopPropagation();
+      const deviceMarker = markerRegistry[element.device_id];
+      if (deviceMarker) {
+        map.setView(deviceMarker.getLatLng(), 15, { animate: true });
+        deviceMarker.openPopup();
+      }
+    };
+    
+    locateBtn.addEventListener('click', locateHandler);
+    li.addEventListener('click', locateHandler);
+    
+    li.appendChild(infoDiv);
+    li.appendChild(locateBtn);
+    deviceList.appendChild(li);
+  });
+}
 
 async function set_alarms_in_local_storage() {
   const response = await fetch('https://web-production-ec8f7.up.railway.app/getAlarms')
