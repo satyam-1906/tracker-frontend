@@ -103,7 +103,7 @@ async function fetchData() {
             delete markerRegistry[id];
         }
     });
-    map.setView(coords, map.getZoom(), {animate:true, duration:1});
+    //map.setView(coords, map.getZoom(), {animate:true, duration:1});
     marker.slideTo(coords, {duration: 1000});
   } catch (error) {
     // 4. Handle network-level failures or thrown errors
