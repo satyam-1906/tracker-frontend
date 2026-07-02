@@ -66,7 +66,7 @@ function errorCallback(error) {
 async function fetchData() {
   try {
     // 1. Initiate the GET request (fetch uses GET by default)
-    const response = await fetch('https://https://tracker-oeqy.onrender.com/getMarker');
+    const response = await fetch('https://tracker-oeqy.onrender.com/getMarker');
     
     // 2. Check if the HTTP status code is successful (200-299)
     if (!response.ok) {
@@ -121,7 +121,7 @@ if (button){
 
 async function refresh() {
     try {
-        const response = await fetch('https://https://tracker-oeqy.onrender.com/newUser')
+        const response = await fetch('https://tracker-oeqy.onrender.com/newUser')
 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -165,7 +165,7 @@ async function add_alarm() {
     });
 
     const newAlarm = {"device_id": newAlarmDevice, "distance": parseFloat(newAlarmDistance)}
-    const response = await fetch('https://https://tracker-oeqy.onrender.com/setAlarm', {
+    const response = await fetch('https://tracker-oeqy.onrender.com/setAlarm', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -270,7 +270,7 @@ function update_device_list(data) {
 }
 
 async function set_alarms_in_local_storage() {
-  const response = await fetch('https://https://tracker-oeqy.onrender.com/getAlarms')
+  const response = await fetch('https://tracker-oeqy.onrender.com/getAlarms')
   const data = await response.json()
 
   if (!response.ok) {
@@ -305,7 +305,7 @@ async function update_alarm_list() {
 }
 
 async function sync_user_list() {
-  const response = await fetch('https://https://tracker-oeqy.onrender.com/getUsers')
+  const response = await fetch('https://tracker-oeqy.onrender.com/getUsers')
   
   if (!response.ok) {
     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -334,7 +334,7 @@ document.getElementById("alarm_list").addEventListener('click', async function(e
   if (event.target.classList.contains('cancel-btn')) {
     const splits = event.target.closest('li').innerText.split(" ")
     const alarm = {"device_id": splits[0], "distance": parseFloat(splits[1])}
-    const response = await fetch('https://https://tracker-oeqy.onrender.com/deleteAlarm', {
+    const response = await fetch('https://tracker-oeqy.onrender.com/deleteAlarm', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
